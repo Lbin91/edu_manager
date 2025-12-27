@@ -87,13 +87,21 @@
 ### Collection: `students`
 - `id`: UUID (PK)
 - `name`: String
+- `affiliation`: String (School Name - Enum/Selection)
 - `parent_phone`: String
 - `academy_id`: String (FK)
 - `default_schedule`: Map (e.g., {"Mon": "15:00", "Wed": "16:00"})
 
-### Collection: `shuttle_routes`
+### Collection: `shuttle_times` (차량 타임 - 운행 회차 그룹)
 - `id`: UUID
-- `name`: String ("A호차 등원")
+- `name`: String (e.g., "1호차 등원 1회차", "3시 등원 타임")
+- `time`: String (e.g., "14:50")
+- `type`: Enum ("pickup", "dropoff")
+
+### Collection: `shuttle_routes` (세부 노선)
+- `id`: UUID
+- `shuttle_time_id`: String (FK) - 어떤 타임에 속하는지
+- `name`: String (e.g., "A코스(아파트)", "B코스(주택)")
 - `stops`: Array<Stop> (정류장 목록)
 - `type`: Enum ("fixed", "dynamic")
 
