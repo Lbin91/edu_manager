@@ -56,10 +56,10 @@
 ## 3. 기술 스택 (Tech Stack)
 
 ### Client
-- **Language**: Swift 6
-- **UI Framework**: SwiftUI
-- **Architecture**: TCA (The Composable Architecture) - 상태 관리 및 사이드 이펙트 제어 용이
-- **Local DB**: SwiftData (네트워크 불안정 시 로컬 캐싱 및 동기화)
+- **Framework**: Flutter (Cross-platform)
+- **Language**: Dart
+- **State Management**: Riverpod (Recommended) or BLoC
+- **Local DB**: Isar / Hive (NoSQL based, fast) or SQLite
 
 ### Backend (Firebase Serverless)
 - **Auth**: Firebase Auth (Google, Apple)
