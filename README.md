@@ -1,2 +1,16 @@
 # edu_manager
-🚌 에듀매니저(EduManager): 학원 원생 출결 및 차량 운행 관리를 위한 간단한 서비스. 개발자의 설계 노하우를 담아 복잡한 학원 운영 업무를 디지털로 최적화했습니다. (Serverless, Real-time Sync, Push Notification)
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
