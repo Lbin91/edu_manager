@@ -69,48 +69,64 @@
 
 ---
 
-## 4. 데이터 구조 설계 (Draft Schema)
+## 4. 데이터 구조 설계 (Supabase PostgreSQL Schema)
 
-### Collection: `users`
-- `uid`: String (PK)
-- `email`: String
+> **Note**: 모든 테이블은 `created_at`, `updated_at` 타임스탬프를 포함합니다.
+
+### Table: `users` (사용자 정보)
+- `id`: UUID (PK, References `auth.users.id`)
+- `email`: String (Not Null)
 - `name`: String
 - `role`: Enum ("admin", "teacher", "driver", "pending")
-- `academy_id`: String (FK)
+- `academy_id`: UUID (FK, References `academies.id`)
 - `fcm_token`: String
+- `social_provider`: String ("google", "apple") - *UI 표시용 (Option)*
 
-### Collection: `academies`
-- `id`: String (PK)
-- `name`: String
-- `invite_code`: String (Unique)
-
-### Collection: `students`
+### Table: `academies` (학원 정보)
 - `id`: UUID (PK)
 - `name`: String
-- `affiliation`: String (School Name - Enum/Selection)
-- `parent_phone`: String
-- `academy_id`: String (FK)
-- `default_schedule`: Map (e.g., {"Mon": "15:00", "Wed": "16:00"})
+- `invite_code`: String (Unique, Index)
 
-### Collection: `shuttle_times` (차량 타임 - 운행 회차 그룹)
-- `id`: UUID
-- `name`: String (e.g., "1호차 등원 1회차", "3시 등원 타임")
-- `time`: String (e.g., "14:50")
-- `type`: Enum ("pickup", "dropoff")
+### Table: `students` (원생 정보)
+- `id`: UUID (PK)
+- `academy_id`: UUID (FK)
+- `name`: String
+- `school_name`: String
+- `grade`: Integer
+- `parent_phone_primary`: String (Not Null)
+- `parent_phone_secondary`: String (Nullable)
+- `sibling_ids`: UUID[] (Array of Student IDs, Nullable) - *형제/자매 연결*
+- `address`: String
 
-### Collection: `shuttle_routes` (세부 노선)
-- `id`: UUID
-- `shuttle_time_id`: String (FK) - 어떤 타임에 속하는지
-- `name`: String (e.g., "A코스(아파트)", "B코스(주택)")
-- `stops`: Array<Stop> (정류장 목록)
-- `type`: Enum ("fixed", "dynamic")
+### Table: `master_stops` (기본 정류장 정보)
+- `id`: UUID (PK)
+- `academy_id`: UUID (FK)
+- `name`: String (Not Null)
+- `lat`: Double (Nullable)
+- `lng`: Double (Nullable)
 
-### Collection: `daily_shuttle_logs` (운행 기록)
-- `date`: String ("2025-01-01")
-- `route_id`: String (FK)
-- `driver_id`: String (FK)
-- `stops_status`: Array (각 정류장별 도착/패스 여부)
-- `boarded_students`: Array<StudentID> (탑승한 학생 목록)
+### Table: `shuttle_routes` (통합 노선 및 스케줄)
+- `id`: UUID (PK)
+- `academy_id`: UUID (FK)
+- `name`: String (e.g., "1호차 A코스")
+- `driver_id`: UUID (FK, References `users.id`)
+- `car_number`: String
+- `departure_time`: Time (e.g., "14:50")
+- `stops`: JSONB (Array of Stop Objects)
+    - `stop_id`: UUID (References `master_stops.id`)
+    - `name`: String (Snapshot/Override)
+    - `scheduled_time`: Time
+    - `sequence_order`: Integer
+
+### Table: `daily_attendance` (일일 출결/탑승 기록)
+- `id`: UUID (PK)
+- `date`: Date (Index)
+- `student_id`: UUID (FK)
+- `route_id`: UUID (FK, References `shuttle_routes.id`)
+- `stop_id`: UUID (References `master_stops.id`)
+- `status`: Enum ("waiting", "boarded", "dropoff", "absent")
+- `check_in_time`: Timestamp
+- `check_out_time`: Timestamp
 
 ---
 
